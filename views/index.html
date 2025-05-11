@@ -1,0 +1,39 @@
+<!DOCTYPE html> 
+<html lang="pt-br"> 
+<head> 
+  <meta charset="UTF-8"> 
+  <title>Organização de Projetos: MVC</title> 
+  <link rel="stylesheet" href="style.css"> 
+</head> 
+<body> 
+  <h1>Cadastro de Usuários (MVC)</h1> 
+  <form onsubmit="addUser(event)"> 
+    <input id="name" placeholder="Nome do Usuário" required /> 
+    <button type="submit">Cadastrar</button> 
+  </form> 
+  <h2>Lista de Usuários</h2> 
+  <ul id="userList"></ul> 
+  <script> 
+    async function listarUsuarios() { 
+      const res = await fetch('/api/users'); 
+      const users = await res.json(); 
+      const userList = document.getElementById('userList'); 
+      userList.innerHTML = ''; 
+      users.forEach(user => { 
+        userList.innerHTML += `<li>${user.name}</li>`; 
+      }); 
+    } 
+    async function addUser(e) { 
+      e.preventDefault(); 
+      const name = document.getElementById('name').value; 
+      await fetch('/api/users', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ name }) 
+      }); 
+      listarUsuarios(); 
+    } 
+    listarUsuarios(); 
+  </script> 
+</body> 
+</html> 
